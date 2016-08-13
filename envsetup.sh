@@ -239,12 +239,24 @@ function printconfig()
     get_build_var report_config
 }
 
+function patchdevicetree()
+{
+for f in `test -d device && find -L device/*/$CUSTOM_BUILD -maxdepth 4 -name 'patchsetup.sh' 2> /dev/null`
+do
+    echo "Patching device-tree -> $f"
+    . $f
+done
+
+unset f
+}
+
 function set_stuff_for_environment()
 {
     settitle
     set_java_home
     setpaths
     set_sequence_number
+    patchdevicetree
 
     export ANDROID_BUILD_TOP=$(gettop)
     # With this environment variable new GCC can apply colors to warnings/errors
